@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"lib": ["DOM", "ES2022"],
+		"jsx": "react-jsx",
+		"module": "es2022",
+		"skipLibCheck": true,
+		"isolatedModules": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "bundler",
+		"useDefineForClassFields": true,
+		"rootDir": "./src"
+	},
+	"include": ["src"]
+	}
