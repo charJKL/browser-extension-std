@@ -6,7 +6,8 @@
 		"./build"
 	],
 	"exports": {
-		"./backend": "./build/backend.js"
+		"./backend": "./build/backend.js",
+		"./frontend": "./build/frontend.js"
 	},
 	"scripts": {
 		"build": "rslib",

@@ -1,4 +1,4 @@
-import "firefox-webext-browser";
+import "firefox-webext-browser"; // TODO why I need import this only in one file?
 
 export type MessageSender = browser.runtime.MessageSender;
 export type SendResponse = (response?: unknown) => void;
