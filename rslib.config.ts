@@ -6,6 +6,7 @@ export default defineConfig(
 	plugins: [pluginReact()],
 	source: 
 	{
+		tsconfigPath: "./tsconfig.json",
 		entry: 
 		{
 			index: ['./src/**'],
@@ -13,7 +14,7 @@ export default defineConfig(
 	},
 	lib: 
 	[
-		{ bundle: false, dts: true, format: 'esm', },
+		{ bundle: false, dts: true, format: 'esm' },
 	],
 	output: 
 	{
