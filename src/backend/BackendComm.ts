@@ -1,28 +1,20 @@
+import { Comm, EndpointDesc, ResolveNames } from "../shared/Comm";
 
 export type MessageSender = browser.runtime.MessageSender;
 export type SendResponse = (response?: unknown) => void;
 
-type Listener = () => unknown;
-type Data = any;
-type Keyof<T> = keyof T & string;
-
-
-type EndpointDescName<T> = T extends `GET:${infer Y}` | `POST:${infer Y}` ? T : `WRONG_ENDPOINT_NAME:\`${T & string}\``;
-type EndpointDescFunc<T> = T extends (...args: infer A) => infer R ? A extends Data ? R extends Data ? T : "<NOT_SUPPORTED_RETURN>" : "<NOT_SUPPORTED_ARGS>" : T;
-type EndpointDesc<T> = { [Key in Keyof<T> as EndpointDescName<Key>]: EndpointDescFunc<T[Key]> };
-
-type ResolveNames<T extends EndpointDesc<unknown>> = Keyof<T>;
+type Listener = (...args: unknown[]) => unknown; // TODO change this type
 
 /**
  *
  */
 export class BackendComm<T extends EndpointDesc<T>>
 {
-	private readonly $listeners: Map<ResolveNames<T>, Listener>; 
+	private readonly $listeners: Map<string, Listener>; 
 
 	public constructor()
 	{
-		this.$listeners = new Map();
+		this.$listeners = new Map(); // TODO this should be multimap
 
 		browser.runtime.onMessage.addListener(this.invokeAssignedListeners.bind(this));
 	}
@@ -34,7 +26,15 @@ export class BackendComm<T extends EndpointDesc<T>>
 
 	private invokeAssignedListeners(payload: unknown, sender: MessageSender, sendResponse: SendResponse) : boolean
 	{
-		console.log("BackednComm::invokeAssignedListeners", payload, sender); // TODO implement this
+		console.log("BackednComm::invokeAssignedListeners", payload, sender); // TODO remove this log
+		(async function(this: BackendComm<T>){
+			const packet = Comm.ValidatePacket(payload);
+			const listener = this.$listeners.get(packet.endpoint);
+			if(listener === undefined) throw new Error("Listener for this endpoint is not set.");
+			const result = await listener.call(undefined, ...(packet.data));
+			const response = Comm.CreatePacket(packet.endpoint, result);
+			sendResponse(response);
+		}).call(this);
 		return true; // indicate that result will be async.
 	}
 }
