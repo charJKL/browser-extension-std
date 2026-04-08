@@ -1,4 +1,4 @@
-import { Comm, EndpointDesc, ResolveNames } from "../shared/Comm";
+import { Comm, EndpointDesc, ResolveNames } from "@/shared/Comm";
 
 export type MessageSender = browser.runtime.MessageSender;
 export type SendResponse = (response?: unknown) => void;

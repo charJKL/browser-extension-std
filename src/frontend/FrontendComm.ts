@@ -1,4 +1,4 @@
-import { Comm, EndpointDesc, ResolveNames, ResolveData } from "../shared/Comm";
+import { Comm, EndpointDesc, ResolveNames, ResolveData } from "@/shared/Comm";
 
 
 
