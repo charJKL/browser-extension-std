@@ -11,6 +11,7 @@ storybook-static
 doc_build/
 
 # IDE
+.TODO.txt
 .vscode/*
 !.vscode/extensions.json
 .idea
