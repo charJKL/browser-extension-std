@@ -1,3 +1,5 @@
+import {isObject} from "@/util/func/isObject";
+
 
 type Keyof<T> = keyof T & string;
 
@@ -11,6 +13,8 @@ export type ResolveNames<T extends EndpointDesc<unknown>> = Keyof<T>;
 export type ResolveData<T> = unknown; // TODO implement this
 
 export type Packet = { endpoint: string, data: Array<Data> };
+
+
 /**
  *
  */
@@ -18,12 +22,11 @@ export class Comm
 {
 	public static ValidatePacket(payload: unknown) : Packet
 	{
-		if(!(typeof payload === "object" && payload !== null && "endpoint" in payload)) throw new Error("Packet is corrupted.");
-		if(!(typeof payload === "object" && payload !== null && "data" in payload)) throw new Error("Packet is corrupted.");
+		if(isObject(payload, "endpoint", String) == false) throw new Error("Packet is corrupted");
+		if(isObject(payload, "data", Array) == false) throw new Error("Packet is corrupted");
 
-
-		const endpoint = payload.endpoint as string; // TODO remove this casting
-		const data = payload.data as Data[]; // TODO remove this casting
+		const endpoint = payload.endpoint as unknown as string; // TODO remove this casting
+		const data = payload.data as unknown as Data[]; // TODO remove this casting
 		return { endpoint, data };
 	}
 
@@ -34,3 +37,5 @@ export class Comm
 		return { endpoint, data: dataChecked };
 	}
 }
+
+
