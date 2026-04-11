@@ -1,3 +1,5 @@
+import { hasProp } from "@/util/func/hasProp";
+
 /**
  * Only those types are supported.
  */
@@ -14,9 +16,7 @@ type ResolvePropType<T extends SupportedPropType> = T extends { new (value?: unk
  */
 export function isObject<S extends string, Y extends SupportedPropType>(obj: unknown, prop: S, type: Y) : obj is { [Key in S]: ResolvePropType<Y> }
 {
-	if(typeof obj === "undefined") return false;
-	if(obj === null) return false;
-	if(obj.hasOwnProperty(prop) === false) return false;
+	if(hasProp(obj, prop) == false) return false;
 	if(doesTypesMatch(type, obj[prop]) === false) return false;
 	return true;
 }
