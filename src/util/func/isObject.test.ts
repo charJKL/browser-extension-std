@@ -3,22 +3,20 @@ import { isObject } from "./isObject";
 
 const data =
 [
-	{ object: {}, prop: "fruits", type: undefined, expected: false },
-	{ object: { fruit: "", healthy: true}, prop: "healthy", type: undefined, expected: false },
-	{ object: { fruit: "", healthy: true}, prop: "healthy", type: Boolean, expected: true },
-	{ object: { fruit: "", healthy: true}, prop: "healthy", type: true, expected: true },
-	{ object: { fruit: "", healthy: true}, prop: "healthy", type: false, expected: false },
-	{ object: { fruits: "", count: 7}, prop: "count", type: undefined, expected: false },
-	{ object: { fruits: "", count: 7}, prop: "count", type: Number, expected: true },
-	{ object: { fruits: "", count: 7}, prop: "count", type: 7, expected: true },
-	{ object: { fruits: "", count: 7}, prop: "count", type: 2, expected: false },
-	{ object: { fruits: "", count: "7"}, prop: "count", type: 1, expected: false },
-	{ object: { fruit: "apple" }, prop: "fruit", type: undefined, expected: false },
-	{ object: { fruit: "apple" }, prop: "fruit", type: String, expected: true },
-	{ object: { fruit: "apple" }, prop: "fruit", type: "apple", expected: true },
-	{ object: { fruit: "apple" }, prop: "fruit", type: "orange", expected: false }
+	{ object: {}, blueprint: {}, expected: true},
+	{ object: {}, blueprint: {name: String}, expected: false},
+	{ object: {name: "Joe", surname:"Doe", age: 23}, blueprint: {name: String}, expected: true},
+	{ object: {name: "Joe", surname:"Doe", age: 23}, blueprint: {name: String, surname: String, age: Number}, expected: true},
+	{ object: {name: "Joe", surname:"Doe", age: 23}, blueprint: {name: String, surname: String, age: 23}, expected: true},
+	{ object: {name: "Joe", surname:"Doe", age: 23, cars: ["First", "Second"]}, blueprint: {name: String, surname: String, age: 23}, expected: true},
+	{ object: {name: "Joe", surname:"Doe", age: 23, cars: ["First", "Second"]}, blueprint: {name: String, surname: String, age: 23, cars: Array(String)}, expected: true},
+	{ object: {name: "Joe", surname:"Doe", age: 23, cars: []}, blueprint: {name: String, surname: String, age: 23, cars: Array(String)}, expected: true},
+	{ object: {name: "Joe", surname:"Doe", age: 23, cars: [false]}, blueprint: {name: String, surname: String, age: 23, cars: Array(String)}, expected: false},
+	{ object: {name: "Joe", surname:"Doe" }, blueprint: {name: String, surname: String, age: Number}, expected: false},
+	{ object: {name: 21, surname:"Doe" }, blueprint: {name: String, surname: String, age: Number}, expected: false},
+	{ object: {name: String, surname:"Doe", age: 23 }, blueprint: {name: String, surname: String, age: Number}, expected: false},
 ]
-test.each(data)("Does $object has `$prop` property, and it's type is `$type`?", function({object, prop, type, expected})
+test.each(data)("Does `$object` match `$blueprint`?", function({object, blueprint, expected})
 {
-	expect(isObject(object, prop, type)).toBe(expected);
+	expect(isObject(object, blueprint)).toBe(expected);
 });
