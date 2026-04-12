@@ -2,11 +2,11 @@ import { isUndefined } from "@/util/func/isUndefined";
 import { isNull } from "@/util/func/isNull";
 import { isArray } from "@/util/func/isArray";
 
-type SupportedPropType = Array<StringConstructor | NumberConstructor | BooleanConstructor> | StringConstructor | NumberConstructor | BooleanConstructor | string | number | boolean;
+type SupportedPropType = Array<ObjectConstructor | StringConstructor | NumberConstructor | BooleanConstructor> | ObjectConstructor | StringConstructor | NumberConstructor | BooleanConstructor | string | number | boolean;
 
 export function hasProp<S extends string, T extends SupportedPropType>(obj: unknown, prop: S, type?: T) : obj is { [Key in S]: T }
 {
-	const hasOwnProperty = (obj: unknown, prop: S) : obj is { [Key in S]: unknown } => obj.hasOwnProperty(prop);
+	const hasOwnProperty = (obj: {}, prop: S) : obj is { [Key in S]: unknown } => obj.hasOwnProperty(prop);
 	if(isUndefined(obj)) return false;
 	if(isNull(obj)) return false;
 	if(hasOwnProperty(obj, prop) === false) return false;
