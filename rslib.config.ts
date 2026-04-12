@@ -9,7 +9,7 @@ export default defineConfig(
 		tsconfigPath: "./tsconfig.json",
 		entry: 
 		{
-			index: ['./src/**'],
+			index: ["./src/**", "!src/**/*.test.ts"],
 		},
 	},
 	lib: 
