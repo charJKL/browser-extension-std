@@ -1,5 +1,5 @@
 import {isObject} from "@/util/func/isObject";
-
+import * as z from "zod"; 
 
 type Keyof<T> = keyof T & string;
 
@@ -14,6 +14,13 @@ export type ResolveData<T> = unknown; // TODO implement this
 
 export type Packet = { endpoint: string, data: Array<Data> };
 
+const dataz = z.object(
+{
+	endpoint: z.string(),
+	get data() { return z.array(z.union([dataz, z.string(),z.number(), z.boolean()])) }
+})
+
+
 
 /**
  *
@@ -22,10 +29,14 @@ export class Comm
 {
 	public static ValidatePacket(payload: unknown) : Packet
 	{
-		if(isObject(payload, "endpoint", String) == false) throw new Error("Packet is corrupted");
-		if(isObject(payload, "data", Array) == false) throw new Error("Packet is corrupted");
+		if(isObject(payload, {endpoint: String, data: Array(Object)}) == false ) throw new Error()
+		
+		const result = dataz.safeParse(payload);
+		if(result.success == false) return;
+		const x = result.data.
 
-		const endpoint = payload.endpoint as unknown as string; // TODO remove this casting
+
+		const endpoint = payload.endpoint;
 		const data = payload.data as unknown as Data[]; // TODO remove this casting
 		return { endpoint, data };
 	}
@@ -37,5 +48,6 @@ export class Comm
 		return { endpoint, data: dataChecked };
 	}
 }
+
 
 
