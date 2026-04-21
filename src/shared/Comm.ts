@@ -14,13 +14,9 @@ export type ResolveData<T> = unknown; // TODO implement this
 
 export type Packet = { endpoint: string, data: Array<Data> };
 
-const dataz = z.object(
-{
-	endpoint: z.string(),
-	get data() { return z.array(z.union([dataz, z.string(),z.number(), z.boolean()])) }
-})
 
-
+const DataDesc : z.ZodType<Data> = z.lazy(() => z.union([z.record(z.string(), DataDesc), z.array(DataDesc), z.number(), z.string(), z.boolean()]))
+const PayloadDesc = z.object({ endpoint: z.string(), data: z.array(DataDesc) });
 
 /**
  *
@@ -29,23 +25,21 @@ export class Comm
 {
 	public static ValidatePacket(payload: unknown) : Packet
 	{
-		if(isObject(payload, {endpoint: String, data: Array(Object)}) == false ) throw new Error()
-		
-		const result = dataz.safeParse(payload);
-		if(result.success == false) return;
-		const x = result.data.
+		const validatePayload = PayloadDesc.safeParse(payload); // TODO remove `Zod` library from dependencies.
+		if(validatePayload.success === false) throw new Error("Payload is corrupted") 
 
-
-		const endpoint = payload.endpoint;
-		const data = payload.data as unknown as Data[]; // TODO remove this casting
+		const endpoint = validatePayload.data.endpoint;
+		const data = validatePayload.data.data;
 		return { endpoint, data };
 	}
 
-	public static CreatePacket(endpoint: string, data: unknown) : Packet
+	public static CreatePacket(endpoint: string, data: Array<unknown>) : Packet
 	{
-		// TODO check if data is valid.
-		const dataChecked = [data] as Data[]; // TODO remove this casting
-		return { endpoint, data: dataChecked };
+		const payload : unknown = { endpoint, data };
+		const validatePayload = PayloadDesc.safeParse(payload);
+		if(validatePayload.success === false) throw new Error("Data is not supported");
+
+		return { endpoint: validatePayload.data.endpoint, data: validatePayload.data.data };
 	}
 }
 
