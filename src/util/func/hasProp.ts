@@ -3,8 +3,9 @@ import { isNull } from "@/util/func/isNull";
 import { isArray } from "@/util/func/isArray";
 
 type SupportedPropType = Array<ObjectConstructor | StringConstructor | NumberConstructor | BooleanConstructor> | ObjectConstructor | StringConstructor | NumberConstructor | BooleanConstructor | string | number | boolean;
+type ResolvePropType<T extends SupportedPropType> = T extends { (...value: unknown[]): infer R } ? R : T;
 
-export function hasProp<S extends string, T extends SupportedPropType>(obj: unknown, prop: S, type?: T) : obj is { [Key in S]: T }
+export function hasProp<S extends string, T extends SupportedPropType>(obj: unknown, prop: S, type?: T) : obj is { [Key in S]: ResolvePropType<T> }
 {
 	const hasOwnProperty = (obj: {}, prop: S) : obj is { [Key in S]: unknown } => obj.hasOwnProperty(prop);
 	if(isUndefined(obj)) return false;
