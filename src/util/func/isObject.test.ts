@@ -1,3 +1,4 @@
+// @ts-nocheck because TS is stupid and merge data sample into one type, instead of treat each separate.
 import { test, expect } from "@rstest/core";
 import { isObject } from "./isObject";
 
@@ -15,6 +16,8 @@ const data =
 	{ object: {name: "Joe", surname:"Doe" }, blueprint: {name: String, surname: String, age: Number}, expected: false},
 	{ object: {name: 21, surname:"Doe" }, blueprint: {name: String, surname: String, age: Number}, expected: false},
 	{ object: {name: String, surname:"Doe", age: 23 }, blueprint: {name: String, surname: String, age: Number}, expected: false},
+	{ object: Object, blueprint: {}, expected: false},
+	{ object: 23, blueprint: {}, expected: false},
 ]
 test.each(data)("Does `$object` match `$blueprint`?", function({object, blueprint, expected})
 {
