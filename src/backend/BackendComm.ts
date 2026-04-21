@@ -32,7 +32,7 @@ export class BackendComm<T extends EndpointDesc<T>>
 			const listener = this.$listeners.get(packet.endpoint);
 			if(listener === undefined) throw new Error("Listener for this endpoint is not set.");
 			const result = await listener.call(undefined, ...(packet.data));
-			const response = Comm.CreatePacket(packet.endpoint, result);
+			const response = Comm.CreatePacket(packet.endpoint, [result]);
 			sendResponse(response);
 		}).call(this);
 		return true; // indicate that result will be async.
