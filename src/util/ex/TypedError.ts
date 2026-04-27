@@ -5,5 +5,10 @@
  */
 export class TypedError<V>
 {
-	private readonly $type : V; // TODO this is nessesary because of duck typeing in TS.
+	/**
+	 * The sole purpose of this field is to distinguishing different variants of errors. 
+	 * Because ITS uses duck typing, there must be unique field for type.
+	 */
+	// @ts-ignore 
+	private readonly $type : V;
 }
